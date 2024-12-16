@@ -1,3 +1,10 @@
+-- Creando la base de datos
+CREATE DATABASE distribuidor_autos_dt;
+
+-- Utilizando la base de datos
+use distribuidor_autos_dt;
+
+-- Creando las diferentes tablas que contiene la base de datos
 CREATE TABLE departamento (
     id_departamento INT IDENTITY(1,1) PRIMARY KEY,
     nombre VARCHAR(75) NOT NULL
@@ -34,7 +41,7 @@ CREATE TABLE reporte_desempeno_vendedor (
     id_reporte_desempeno_vendedor INT IDENTITY(1,1) PRIMARY KEY,
     id_empleado INT NOT NULL FOREIGN KEY REFERENCES empleado(id_empleado),
     numero_ventas INT NOT NULL,
-    total_comisiones FLOAT NOT NULL
+    total_comisiones MONEY NOT NULL
 );
 
 CREATE TABLE continente (
@@ -74,7 +81,7 @@ CREATE TABLE calcamonia (
     id_calcamonia INT IDENTITY(1,1) PRIMARY KEY,
     id_vehiculo INT NOT NULL FOREIGN KEY REFERENCES vehiculo(id_vehiculo),
     id_tipo_garantia INT NOT NULL FOREIGN KEY REFERENCES tipo_garantia(id_tipo_garantia),
-    fechaRecibido DATE NOT NULL,
+    fecha_recibido DATE NOT NULL,
     kilometro_inicial FLOAT NOT NULL,
     precio_estandar FLOAT NOT NULL,
     fabricante VARCHAR(50) NOT NULL
@@ -123,7 +130,7 @@ CREATE TABLE detalle_venta (
     id_seguro INT NOT NULL FOREIGN KEY REFERENCES seguro(id_seguro),
     id_calcamonia INT NOT NULL FOREIGN KEY REFERENCES calcamonia(id_calcamonia),
     kilometraje_actual FLOAT NOT NULL,
-    financiamiento CHAR(2)
+    financiamiento BIT
 );
 
 CREATE TABLE factura (
@@ -131,7 +138,7 @@ CREATE TABLE factura (
     id_detalle_venta INT NOT NULL FOREIGN KEY REFERENCES detalle_venta(id_detalle_venta),
     id_empleado INT NOT NULL FOREIGN KEY REFERENCES empleado(id_empleado),
     fecha_venta DATETIME NOT NULL,
-    precioVenta FLOAT NOT NULL
+    precio_de_venta FLOAT NOT NULL
 );
 
 CREATE TABLE informe_para_estado (
