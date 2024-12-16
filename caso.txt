@@ -15,8 +15,7 @@ Operaciones básicas
 	características que quieren y cierto conocimiento de los modelos que ofrece el distribuidor.
 	Cuando entran a la sala de exhibición les da la bienvenida cualquier vendedor que esté libre.
 	En pocos casos, especifican con cuál vendedor quieren tratar. Trabajan con un solo vendedor
-	hasta que el trato está completo, porque todas las ventas se realizan sobre una base de
-	comisión.
+	hasta que el trato está completo, porque todas las ventas se realizan sobre una base de comisión.
 
 	En cada vehículo hay una calcomanía con el precio, que se destaca de forma prominente en
 	la ventana lateral. Los clientes negocian con el vendedor para obtener un mejor precio. Si el
@@ -61,14 +60,14 @@ Necesidades de información
 	También deben remitir directamente al Estado el impuesto por ventas estatal y el costo
 	de la licencia por cada venta. Se les requiere obtener y enviar pruebas de la cobertura
 	del seguro al Estado antes de liberar el automóvil al nuevo propietario.
-	
+
 	4. Factura de venta. Cuando el automóvil se entrega al cliente, se le proporciona a éste
 	una factura de venta completa (que muestra la información del cliente, nombre del
 	vendedor, ID del vehículo, kilometraje actual y todas las especificaciones, incluida
 	cualquier personalización adicional, financiamiento, información de garantía,
 	información de licencia y seguro, precio y otros detalles más), y una copia se conserva
 	en la distribuidora. Esta factura de venta es la misma, ya sea que el auto sea nuevo o usado.
-
+	
 	5. Reporte de desempeño del vendedor. A Jim le gustaría un reporte mensual que
 	resuma las ventas de cada vendedor durante el mes anterior. La cantidad de comisión
 	que gana también se muestra en el reporte.
@@ -76,3 +75,4 @@ Necesidades de información
 	6. Encuesta de satisfacción del cliente. Dentro de un mes posterior a cada venta, el
 	distribuidor envía una encuesta al nuevo propietario, donde plantea preguntas acerca
 	de la opinión que el cliente tiene del automóvil, el distribuidor y el vendedor.
+
