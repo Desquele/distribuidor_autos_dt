@@ -172,7 +172,6 @@ CREATE TABLE auditoria (
     salario_nuevo FLOAT NULL,
     accion VARCHAR2(20)
 );
-DROP TABLE auditoria;
 
 -- 1.2 creación del trigger
 CREATE OR REPLACE TRIGGER tr_control_auditoria
@@ -219,11 +218,8 @@ END;
 
 /*
     2. Implementa un trigger que bloquee la inserción de ventas en 
-    la tabla detalle_venta si el client tiene menos de 18 años.
+    la tabla detalle_venta si el cliente tiene menos de 18 años.
 */
-
-SELECT * FROM detalle_venta;
-SELECT * FROM cliente;
 
 CREATE OR REPLACE TRIGGER tr_detalle_venta_restriccion
 BEFORE INSERT ON detalle_venta
@@ -236,22 +232,23 @@ BEGIN
         edad_cliente number;
     BEGIN
         
-        -- Consulta para obtener la fecha de nacimiento del cliente
+        -- 1. Consulta para obtener la fecha de nacimiento del cliente
         SELECT 
             fecha_nacimiento
         INTO 
             fecha_nacimiento_cliente
         FROM 
             cliente 
-        WHERE id_cliente = :NEW.id_cliente;
+        WHERE 
+            id_cliente = :NEW.id_cliente;
         
-        -- Obtiene la fecha actual
+        -- 2. Obtiene la fecha actual
         fecha_actual := sysdate;
         
-        -- Obteniendo la edad del cliente
+        -- 3. Obteniendo la edad del cliente
         edad_cliente := TRUNC(MONTHS_BETWEEN(fecha_actual, fecha_nacimiento_cliente) / 12);
                 
-        -- Si la edad del cliente es menor de 18 años, entonces se le notifica
+        -- 4. Si la edad del cliente es menor de 18 años, entonces se le notifica
         -- que no puede comprar porue es menor de edad
         IF edad_cliente < 18 THEN
             RAISE_APPLICATION_ERROR(-20080, 'No se puede efectuar la compra porque es menor de edad');
@@ -262,7 +259,6 @@ BEGIN
 END;
 /
 
-SELECT * FROM cliente;
 -- Insertar cliente
 INSERT INTO cliente (nombres, apellidos, fecha_nacimiento, correo, numero_celular, dui, licencia_conducir)
 VALUES ('Douglas 2', 'Quele', DATE '2007-01-16', 'douglas16@example.com', '60422591', '8211231', 'N');
@@ -270,3 +266,110 @@ VALUES ('Douglas 2', 'Quele', DATE '2007-01-16', 'douglas16@example.com', '60422
 -- Insertar detalle_venta
 INSERT INTO detalle_venta (id_cliente, id_seguro, id_calcamonia, kilometraje_actual, financiamiento) 
 VALUES (11, 1, 5, 30000.5, 0);
+
+/*
+    3. Crea un trigger que cambie el campo estado_nuevo a 'N' en la tabla vehiculo al momento de
+    realizar una venta
+*/
+
+CREATE OR REPLACE TRIGGER tr_cambio_estado_vehiculo
+AFTER INSERT ON detalle_venta
+FOR EACH ROW
+BEGIN
+    
+    -- Declaración de variables
+    DECLARE
+        id_vehiculo_obtenido NUMBER;
+    BEGIN
+                
+        -- 1. Obtener el id del vehiculo
+            SELECT
+                id_vehiculo
+            INTO
+                id_vehiculo_obtenido
+            FROM
+                calcamonia
+            WHERE
+                id_calcamonia = :NEW.id_calcamonia;
+                
+        -- 2. Hacer la modificacion
+            UPDATE 
+                vehiculo
+            SET 
+                estado_nuevo = 'N'
+            WHERE
+                id_vehiculo = id_vehiculo_obtenido;
+    END;
+END;
+/
+
+INSERT INTO detalle_venta (id_cliente, id_seguro, id_calcamonia, kilometraje_actual, financiamiento) 
+VALUES (2, 1, 6, 30000.5, 0);
+
+/*
+    4. Implementa un trigger que valide que el kilometraje_actual 
+    en la tabla detalle_venta no sea menor al kilometro_inicial en la tabla calcamonia
+*/
+
+CREATE OR REPLACE TRIGGER tr_control_kilometraje
+BEFORE INSERT ON detalle_venta
+FOR EACH ROW
+BEGIN
+    
+    -- Declaración de variables
+    DECLARE
+        kilometraje_inicial_obtenido FLOAT;
+        kilometraje_actual_obtenido FLOAT;
+    BEGIN
+      
+        -- 1. Obtener el kilometro 
+        kilometraje_actual_obtenido := :NEW.kilometraje_actual;
+            
+        -- 2. Obtener el kilometraje_inicial
+        SELECT 
+            kilometro_inicial
+        INTO
+            kilometraje_inicial_obtenido
+        FROM
+            calcamonia
+        WHERE
+            id_calcamonia = :NEW.id_calcamonia;
+            
+        -- 3. Verificar que el kilometraje_actual no sea menor al kilometraje_inicial
+        IF  kilometraje_actual_obtenido < kilometraje_inicial_obtenido THEN
+            RAISE_APPLICATION_ERROR(-20030, 'El kilometraje actual no puede ser menor que el inicial');
+        END IF;
+        
+    END;
+END;
+/
+
+INSERT INTO detalle_venta (id_cliente, id_seguro, id_calcamonia, kilometraje_actual, financiamiento) 
+VALUES (2, 1, 5, 100.2, 0);
+
+/*
+     5. Implementa un trigger que valide la longitud al momento de insertar un municipio
+*/
+SELECT * FROM municipio;
+
+CREATE OR REPLACE TRIGGER tr_municipio_longitud
+BEFORE INSERT ON municipio
+FOR EACH ROW
+BEGIN
+    -- Declaración de variables
+    DECLARE
+        longitud NUMBER;
+    BEGIN
+        -- 1. Obtener la longitud sin espacios vacios en ambos lados
+        longitud := LENGTH(TRIM(:NEW.nombre));
+        
+        -- 2. Validar que no sea mayor a 73 (columna definida a máximo 75 caracteres)
+        IF longitud > 73 THEN
+            RAISE_APPLICATION_ERROR(-20009, 'EL limite máximo de longitud es de 73 caracteres');
+        END IF;
+    END;
+END;
+/
+
+INSERT INTO municipio (nombre)
+VALUES ('Lorem ipsum dolor sit amet consectetur adipiscing elit sagittis donec Lor');
