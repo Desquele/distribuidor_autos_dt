@@ -76,6 +76,6 @@ Necesidades de información
 	distribuidor envía una encuesta al nuevo propietario, donde plantea preguntas acerca
 	de la opinión que el cliente tiene del automóvil, el distribuidor y el vendedor.
 
-Este repositorio contiene el diagrama entidad - relación, el script de la creación de las tablas en el lenguaje Transact-SQL, Oracle SQL,
-así como también la creación de consultas en los lenguajes antes mencionados, pero también hace uso del lenguaje PL/SQL.
+Este repositorio contiene el diagrama entidad - relación, el script de la creación de las tablas en Oracle SQL,
+así como también la creación de consultas haciendo uso del lenguaje PL/SQL.
 
